@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Recipe</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: grid;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Recipe</h1>
+        <form id="recipeForm" method="POST" action="{{ url_for('add_recipe') }}">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+            
+            <label for="ingredients">Ingredients:</label>
+            <textarea id="ingredients" name="ingredients" rows="6" required></textarea>
+            
+            <label for="instructions">Instructions:</label>
+            <textarea id="instructions" name="instructions" rows="8" required></textarea>
+            
+            <input type="submit" value="Add Recipe">
+        </form>
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">Back to Homepage</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('recipeForm');
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                if (validateForm()) {
+                    form.submit();
+                }
+            });
+
+            function validateForm() {
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const ingredients = document.getElementById('ingredients').value;
+                const instructions = document.getElementById('instructions').value;
+
+                if (title.trim() === '' || description.trim() === '' || ingredients.trim() === '' || instructions.trim() === '') {
+                    alert('Please fill in all fields.');
+                    return false;
+                }
+
+                return true;
+            }
+        });
+    </script>
+</body>
+</html>

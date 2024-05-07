@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Sharing Platform</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        /* Recipe List Styles */
+        .recipe-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .recipe-item {
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-item h3 {
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+
+        .recipe-details {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .recipe-details p {
+            margin-bottom: 5px;
+        }
+
+        .btn-group {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border: 1px solid #dc3545;
+        }
+
+        /* Add New Recipe Link Styles */
+        .add-recipe-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .add-recipe-link a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+
+        .add-recipe-link a:hover {
+            background-color: #218838;
+        }
+
+        /* Search Styles */
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+
+        .search-btn {
+            padding: 8px 16px;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f8f9fa;">
+    <header>
+        <h1>Recipe Sharing Platform</h1>
+        <!-- Search Form -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for recipes...">
+            <button id="searchBtn" class="search-btn">Search</button>
+        </div>
+    </header>
+    <div class="container">
+        <h2>All Recipes</h2>
+        <ul class="recipe-list">
+            {% for recipe in recipes %}
+            <li class="recipe-item">
+                <h3>{{ recipe.title }}</h3>
+                <div class="recipe-details" id="details-{{ recipe._id }}">
+                    <p><strong>Description:</strong> {{ recipe.description }}</p>
+                    <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+                    <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+                    <div class="btn-group">
+                        <button class="btn btn-primary update-btn" data-id="{{ recipe._id }}">Update</button>
+                        <button class="btn btn-danger delete-btn" data-id="{{ recipe._id }}">Delete</button>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="add-recipe-link">
+            <a href="{{ url_for('add_recipe') }}">Add New Recipe</a>
+        </div>
+    </div>
+    <!-- JavaScript for interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update recipe functionality
+            document.querySelectorAll('.update-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const recipeId = btn.getAttribute('data-id');
+                    window.location.href = `/update_recipe/${recipeId}`;
+                });
+            });
+
+            // Delete recipe functionality
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const recipeId = btn.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this recipe?')) {
+                        window.location.href = `/delete_recipe/${recipeId}`;
+                    }
+                });
+            });
+
+            // Search functionality
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+                const recipeItems = document.querySelectorAll('.recipe-item');
+
+                recipeItems.forEach(item => {
+                    const title = item.querySelector('h3').textContent.trim().toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
